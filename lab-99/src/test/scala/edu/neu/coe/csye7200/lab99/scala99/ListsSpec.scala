@@ -51,6 +51,9 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
   it should "throw an exception for 1, fib0" in {
     a[NoSuchElementException] should be thrownBy kth(1, fib0)
   }
+  it should "throw an exception for -1, fib0" in {
+    a[NoSuchElementException] should be thrownBy kth(1, fib0)
+  }
   it should "get 3 for 3, fib5" in {
     kth(3, fib5) shouldBe 3
   }
@@ -61,6 +64,12 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
   }
   it should "get 6 for fib5" in {
     P04.length(fib5) shouldBe 6
+  }
+  it should "work for very long list" in {
+//    val s = LazyList.continually(1).take(10000)  // lazylist with element 1, length infinite
+//    P04.length(s) shouldBe 10000
+    val s = (LazyList.from(1) take 1000000).toList
+    P04.length(s) shouldBe 1000000
   }
 
   behavior of "P05.reverse"

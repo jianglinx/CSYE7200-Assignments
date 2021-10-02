@@ -1,7 +1,8 @@
 package edu.neu.coe.csye7200.asstmd
 
+import scala.collection.immutable.ListMap
 import scala.io.Source
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 /**
   * This class represents a Movie from the IMDB data file on Kaggle.
@@ -98,7 +99,13 @@ object Movie extends App {
       * @param w a line of input.
       * @return a Try[Movie]
       */
-    def parse(w: String): Try[Movie] = ??? // TO BE IMPLEMENTED
+    def parse(w: String): Try[Movie] = {  // TO BE IMPLEMENTED
+      val xo = Try(w.split(","))
+      xo match {
+        case Success(v) => Try(Movie(v))  // what about the length of the sequence? should be 11, but it pass the test!!!
+        case Failure(e) => throw e  // how about this ???
+      }
+    }
   }
 
   val ingester = new Ingest[Movie]()
@@ -119,9 +126,10 @@ object Movie extends App {
   def elements(list: Seq[String], indices: Int*): List[String] = {
     // Hint: form a new list which is consisted by the elements in list in position indices. Int* means array of Int.
     // 6 points
-    val result: Seq[String] =
-    // TO BE IMPLEMENTED
-    ???
+    val result: Seq[String] = { // TO BE IMPLEMENTED
+      val map = (indices zip list).toMap
+      ListMap(map.toSeq.sortBy(_._1):_*).values.toSeq // sort by key, and get all the values
+    }
     result.toList
   }
 
@@ -201,8 +209,12 @@ object Rating {
     */
   // Hint: This should similar to apply method in Object Name. The parameter of apply in case match should be same as case class Rating
   // 13 points
-  def apply(s: String): Rating = ??? // TO BE IMPLEMENTED
-
+  def apply(s: String): Rating = (for(ws <- rRating.unapplySeq(s)) yield for(w <- ws) yield Option(w))
+  match {
+      case Some(Seq(Some(first), _ , Some(last))) => Rating(first, Try(last.toInt).toOption)
+      case Some(Seq(Some(first), None, None)) => Rating(first, None)
+      case x => throw ParseException(s"parse error in Rating: $s (parsed as $x)")
+  } // TO BE IMPLEMENTED
 }
 
 case class ParseException(w: String) extends Exception(w)

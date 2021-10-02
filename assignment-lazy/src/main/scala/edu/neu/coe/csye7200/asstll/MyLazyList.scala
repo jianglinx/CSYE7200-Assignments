@@ -14,8 +14,6 @@ import scala.annotation.tailrec
   * @tparam X the underlying type of the stream, and of the value <code>x</code>.
   */
 case class MyLazyList[X](x: X, lazyTail: () => ListLike[X]) extends LazyListLike[X] {
-
-
   /**
     * Concatenate this ListLike with ys.
     *
@@ -405,7 +403,7 @@ object MyLazyList {
     * @return a <code>ListLike[X]</code> with an infinite number of element (whose values are <code>x</code>,
     *         <code>x+step</code>, etc.).
     */
-  def from(start: Int, step: Int): ListLike[Int] = new MyLazyList(start, () => from(start + step, step)) // TO BE IMPLEMENTED
+  def from(start: Int, step: Int): ListLike[Int] = MyLazyList(start, () => from(start + step, step)) // TO BE IMPLEMENTED
 
   /**
     * Construct a stream of Integers starting with <code>start</code> and with successive elements being
