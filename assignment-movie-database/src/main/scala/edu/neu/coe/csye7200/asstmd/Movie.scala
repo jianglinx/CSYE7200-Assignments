@@ -1,6 +1,8 @@
 package edu.neu.coe.csye7200.asstmd
 
+import scala.::
 import scala.collection.immutable.ListMap
+import scala.collection.mutable.ListBuffer
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
@@ -100,11 +102,7 @@ object Movie extends App {
       * @return a Try[Movie]
       */
     def parse(w: String): Try[Movie] = {  // TO BE IMPLEMENTED
-      val xo = Try(w.split(","))
-      xo match {
-        case Success(v) => Try(Movie(v))  // what about the length of the sequence? should be 11, but it pass the test!!!
-        case Failure(e) => throw e  // how about this ???
-      }
+      Try(Movie(w.split(",").toSeq))  // match is not requested after Try
     }
   }
 
@@ -127,8 +125,9 @@ object Movie extends App {
     // Hint: form a new list which is consisted by the elements in list in position indices. Int* means array of Int.
     // 6 points
     val result: Seq[String] = { // TO BE IMPLEMENTED
-      val map = (indices zip list).toMap
-      ListMap(map.toSeq.sortBy(_._1):_*).values.toSeq // sort by key, and get all the values
+//      var res = List[String]()
+//      for(index <- indices if index < list.size) res +: list(index); res
+      for (index <- indices) yield list(index)
     }
     result.toList
   }
